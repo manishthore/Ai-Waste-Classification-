@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>History | AI Waste Classification</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI",Arial,sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:#07111F;
+    color:#E8F0F7;
+}
+
+/* ================= NAVBAR ================= */
+
+.navbar{
+    height:70px;
+
+    background:#0B1728;
+
+    border-bottom:1px solid #1B3045;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 6%;
+
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:11px;
+
+    color:#FFFFFF;
+
+    font-size:19px;
+    font-weight:800;
+}
+
+.logo-mark{
+    width:40px;
+    height:40px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:11px;
+
+    background:#12B886;
+
+    box-shadow:0 0 18px rgba(18,184,134,.22);
+}
+
+.nav-links{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.nav-links a{
+    color:#9AAABD;
+
+    text-decoration:none;
+
+    padding:9px 14px;
+
+    border-radius:8px;
+
+    font-size:14px;
+    font-weight:600;
+
+    transition:.25s;
+}
+
+.nav-links a:hover{
+    color:#FFFFFF;
+    background:#14263B;
+}
+
+.nav-links .active{
+    color:#FFFFFF;
+    background:#14263B;
+}
+
+.logout{
+    color:#FF8A8A !important;
+}
+
+/* ================= MAIN ================= */
+
+.container{
+    width:88%;
+    max-width:1300px;
+
+    margin:auto;
+
+    padding:35px 0 50px;
+}
+
+/* ================= HEADER ================= */
+
+.page-header{
+    margin-bottom:25px;
+}
+
+.page-header h1{
+    color:#FFFFFF;
+
+    font-size:30px;
+
+    margin-bottom:7px;
+}
+
+.page-header h1 span{
+    color:#12B886;
+}
+
+.page-header p{
+    color:#718397;
+
+    font-size:14px;
+}
+
+/* ================= CARD ================= */
+
+.history-card{
+    background:#0D1C2E;
+
+    border:1px solid #1B3045;
+
+    border-radius:16px;
+
+    padding:24px;
+
+    box-shadow:0 10px 35px rgba(0,0,0,.18);
+}
+
+/* ================= HEADER ================= */
+
+.card-header{
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    margin-bottom:22px;
+}
+
+.card-title{
+    color:#FFFFFF;
+
+    font-size:19px;
+    font-weight:750;
+}
+
+.card-subtitle{
+    color:#718397;
+
+    font-size:12px;
+
+    margin-top:4px;
+}
+
+.count{
+    padding:7px 12px;
+
+    border-radius:20px;
+
+    background:rgba(18,184,134,.10);
+
+    color:#35D6A5;
+
+    font-size:12px;
+
+    font-weight:700;
+}
+
+/* ================= TABLE ================= */
+
+.table-wrapper{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+
+    border-collapse:collapse;
+
+    min-width:700px;
+}
+
+thead{
+    background:#091827;
+}
+
+th{
+    padding:14px 12px;
+
+    text-align:left;
+
+    color:#718397;
+
+    font-size:11px;
+
+    letter-spacing:.5px;
+
+    border-bottom:1px solid #1B3045;
+}
+
+td{
+    padding:14px 12px;
+
+    color:#C8D3DE;
+
+    font-size:13px;
+
+    border-bottom:1px solid #14283B;
+}
+
+tbody tr{
+    transition:.2s;
+}
+
+tbody tr:hover{
+    background:#101F31;
+}
+
+/* ================= IMAGE ================= */
+
+.waste-image{
+    width:52px;
+    height:52px;
+
+    object-fit:cover;
+
+    border-radius:9px;
+
+    border:1px solid #294359;
+
+    display:block;
+}
+
+/* ================= CATEGORY ================= */
+
+.category{
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    padding:6px 10px;
+
+    border-radius:20px;
+
+    background:rgba(18,184,134,.10);
+
+    color:#35D6A5;
+
+    font-size:11px;
+
+    font-weight:700;
+}
+
+/* ================= CONFIDENCE ================= */
+
+.confidence{
+    font-weight:700;
+
+    color:#D6E0E9;
+}
+
+.confidence-bar{
+    width:100px;
+    height:6px;
+
+    margin-top:6px;
+
+    background:#172A3D;
+
+    border-radius:10px;
+
+    overflow:hidden;
+}
+
+.confidence-fill{
+    height:100%;
+
+    background:#12B886;
+
+    border-radius:10px;
+}
+
+/* ================= DATE ================= */
+
+.date{
+    color:#8192A5;
+
+    white-space:nowrap;
+}
+
+/* ================= EMPTY ================= */
+
+.empty{
+    text-align:center;
+
+    padding:60px 20px;
+}
+
+.empty-icon{
+    font-size:48px;
+
+    margin-bottom:15px;
+}
+
+.empty h3{
+    color:#FFFFFF;
+
+    font-size:18px;
+
+    margin-bottom:7px;
+}
+
+.empty p{
+    color:#718397;
+
+    font-size:13px;
+
+    margin-bottom:20px;
+}
+
+.dashboard-btn{
+    display:inline-block;
+
+    padding:11px 18px;
+
+    border-radius:9px;
+
+    background:#12B886;
+
+    color:#FFFFFF;
+
+    text-decoration:none;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    transition:.25s;
+}
+
+.dashboard-btn:hover{
+    background:#087F5B;
+
+    transform:translateY(-2px);
+}
+
+/* ================= FOOTER ================= */
+
+.footer{
+    text-align:center;
+
+    color:#52677B;
+
+    font-size:12px;
+
+    margin-top:25px;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:700px){
+
+    .navbar{
+        height:auto;
+
+        padding:14px 4%;
+
+        flex-direction:column;
+
+        gap:12px;
+    }
+
+    .nav-links{
+        width:100%;
+
+        justify-content:center;
+
+        flex-wrap:wrap;
+    }
+
+    .container{
+        width:92%;
+
+        padding-top:25px;
+    }
+
+    .page-header h1{
+        font-size:24px;
+    }
+
+    .history-card{
+        padding:17px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+
+        <span class="logo-mark">
+            ♻️
+        </span>
+
+        AI Waste Classification
+
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="{{ url_for('dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('history') }}" class="active">
+            History
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+    <div class="page-header">
+
+        <h1>
+            Prediction <span>History</span> 📋
+        </h1>
+
+        <p>
+            View your previous AI waste classification results.
+        </p>
+
+    </div>
+
+
+    <div class="history-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <div class="card-title">
+                    Classification Records
+                </div>
+
+                <div class="card-subtitle">
+                    All your previous waste detection results
+                </div>
+
+            </div>
+
+            <div class="count">
+                {{ predictions|length }} Records
+            </div>
+
+        </div>
+
+
+        {% if predictions %}
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>IMAGE</th>
+                        <th>CATEGORY</th>
+                        <th>CONFIDENCE</th>
+                        <th>DATE & TIME</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                {% for item in predictions %}
+
+                    <tr>
+
+                        <!-- IMAGE -->
+
+                        <td>
+
+                            <img
+                                src="{{ url_for('uploaded_file', filename=item['image_file']) }}"
+                                alt="Waste Image"
+                                class="waste-image"
+                            >
+
+                        </td>
+
+
+                        <!-- CATEGORY -->
+
+                        <td>
+
+                            <span class="category">
+
+                                ♻️
+
+                                {{ item['prediction']|title }}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- CONFIDENCE -->
+
+                        <td>
+
+                            <div class="confidence">
+
+                                {{ item['confidence'] }}%
+
+                            </div>
+
+                            <div class="confidence-bar">
+
+                                <div
+                                    class="confidence-fill"
+                                    style="width:{{ item['confidence'] }}%"
+                                ></div>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- DATE -->
+
+                        <td class="date">
+
+                            {{ item['created_at'] }}
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty">
+
+            <div class="empty-icon">
+                📭
+            </div>
+
+            <h3>
+                No Prediction History
+            </h3>
+
+            <p>
+                Upload your first waste image to start building your history.
+            </p>
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="dashboard-btn"
+            >
+                Go to Dashboard
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="footer">
+        © 2026 AI Waste Classification Project
+    </div>
+
+</div>
+
+</body>
+</html>

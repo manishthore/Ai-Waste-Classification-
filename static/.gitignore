@@ -1,0 +1,10 @@
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.env
+users.db
+uploads/*
+static/uploads/*
+dataset/
+real_test/

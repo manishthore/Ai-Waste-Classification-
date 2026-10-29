@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Admin Login | AI Waste Classification</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+
+    min-height:100vh;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-family:Arial, sans-serif;
+
+    background:
+        radial-gradient(
+            circle at top left,
+            rgba(18,184,134,.16),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at bottom right,
+            rgba(121,80,242,.16),
+            transparent 35%
+        ),
+        #050B14;
+
+    color:#E8F0F7;
+
+}
+
+.admin-card{
+
+    width:430px;
+
+    padding:42px;
+
+    border-radius:26px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(13,28,46,.98),
+            rgba(7,17,31,.98)
+        );
+
+    border:1px solid #294359;
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,.55);
+
+}
+
+.logo{
+
+    width:75px;
+    height:75px;
+
+    margin:auto;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:22px;
+
+    font-size:36px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #12B886,
+            #087F5B
+        );
+
+    box-shadow:
+        0 12px 35px rgba(18,184,134,.30);
+
+}
+
+h1{
+
+    text-align:center;
+
+    margin-top:22px;
+
+    font-size:30px;
+
+}
+
+h1 span{
+
+    color:#12B886;
+
+}
+
+.subtitle{
+
+    text-align:center;
+
+    color:#8292A6;
+
+    margin-top:10px;
+
+    margin-bottom:25px;
+
+}
+
+.badge{
+
+    text-align:center;
+
+    padding:10px;
+
+    border-radius:30px;
+
+    border:1px solid #294359;
+
+    color:#12B886;
+
+    font-size:13px;
+
+    margin-bottom:25px;
+
+}
+
+.flash{
+
+    padding:12px 15px;
+
+    border-radius:12px;
+
+    margin-bottom:18px;
+
+    background:rgba(255,146,43,.10);
+
+    border:1px solid rgba(255,146,43,.35);
+
+    color:#FFB66B;
+
+    font-size:14px;
+
+}
+
+label{
+
+    display:block;
+
+    margin:16px 0 8px;
+
+    font-weight:bold;
+
+    font-size:14px;
+
+}
+
+input{
+
+    width:100%;
+
+    padding:15px 16px;
+
+    border-radius:12px;
+
+    border:1px solid #294359;
+
+    background:#07111F;
+
+    color:#E8F0F7;
+
+    outline:none;
+
+    font-size:15px;
+
+}
+
+input:focus{
+
+    border-color:#12B886;
+
+    box-shadow:
+        0 0 0 3px rgba(18,184,134,.10);
+
+}
+
+button{
+
+    width:100%;
+
+    margin-top:25px;
+
+    padding:16px;
+
+    border:none;
+
+    border-radius:13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #12B886,
+            #087F5B
+        );
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 12px 30px rgba(18,184,134,.25);
+
+}
+
+button:hover{
+
+    transform:translateY(-2px);
+
+}
+
+.back{
+
+    display:block;
+
+    text-align:center;
+
+    margin-top:22px;
+
+    color:#8292A6;
+
+    text-decoration:none;
+
+}
+
+.back:hover{
+
+    color:#12B886;
+
+}
+
+.footer{
+
+    text-align:center;
+
+    margin-top:28px;
+
+    font-size:12px;
+
+    color:#66788A;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="admin-card">
+
+    <div class="logo">
+        ⚙️
+    </div>
+
+    <h1>
+        Admin <span>Login</span>
+    </h1>
+
+    <p class="subtitle">
+        Secure administration panel
+    </p>
+
+    <div class="badge">
+        🔐 Authorized Administrator Access
+    </div>
+
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            {% for category, message in messages %}
+
+                <div class="flash">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <form
+        action="{{ url_for('admin_login') }}"
+        method="POST"
+    >
+
+        <label>
+            Admin Email
+        </label>
+
+        <input
+            type="email"
+            name="email"
+            placeholder="admin@aiwaste.com"
+            required
+        >
+
+
+        <label>
+            Admin Password
+        </label>
+
+        <input
+            type="password"
+            name="password"
+            placeholder="Enter admin password"
+            required
+        >
+
+
+        <button type="submit">
+            🔐 Login to Admin Dashboard →
+        </button>
+
+    </form>
+
+
+    <a
+        href="{{ url_for('index') }}"
+        class="back"
+    >
+        ← Back to Home
+    </a>
+
+
+    <div class="footer">
+        © 2026 AI Waste Classification
+    </div>
+
+</div>
+
+</body>
+
+</html>

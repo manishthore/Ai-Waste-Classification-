@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Waste Classification Result</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(circle at top left, #12395c, transparent 35%),
+                radial-gradient(circle at bottom right, #123d4a, transparent 35%),
+                #07111f;
+            color: white;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1100px;
+            margin: auto;
+            padding: 30px 0 60px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .brand {
+            color: #7fffd4;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .back-btn:hover {
+            background: rgba(0,220,170,0.15);
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title h1 {
+            font-size: 34px;
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            color: #a9bfd2;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .card {
+            background: rgba(16,34,57,0.9);
+            border: 1px solid rgba(100,180,255,0.18);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+        }
+
+        .image-card h2,
+        .result-card h2 {
+            color: #7fffd4;
+            margin-bottom: 20px;
+        }
+
+        .uploaded-image {
+            width: 100%;
+            max-height: 430px;
+            object-fit: contain;
+            border-radius: 15px;
+            background: #020a13;
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .waste-icon {
+            text-align: center;
+            font-size: 60px;
+            margin: 10px 0;
+        }
+
+        .prediction-name {
+            text-align: center;
+            font-size: 34px;
+            font-weight: bold;
+            text-transform: capitalize;
+            margin-bottom: 25px;
+        }
+
+        /* CONFIDENCE */
+
+        .confidence-box {
+            background: rgba(255,255,255,0.05);
+            padding: 18px;
+            border-radius: 14px;
+        }
+
+        .confidence-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .confidence-bar {
+            height: 12px;
+            width: 100%;
+            background: #18293b;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg,#00d4aa,#64f5d0);
+            border-radius: 20px;
+        }
+
+        .confidence-status {
+            margin-top: 12px;
+            color: #ffd166;
+        }
+
+        .status-message {
+            margin-top: 10px;
+            color: #b8cada;
+            line-height: 1.6;
+        }
+
+        /* GENERAL INFORMATION */
+
+        .info-section {
+            margin-top: 25px;
+        }
+
+        .info-section h2 {
+            color: #7fffd4;
+            font-size: 22px;
+            margin-bottom: 14px;
+        }
+
+        .info-card {
+            background: rgba(20,48,76,0.75);
+            border: 1px solid rgba(100,190,255,0.18);
+            border-radius: 15px;
+            padding: 22px;
+        }
+
+        .info-card p {
+            color: #d7e6f2;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        /* RECYCLING */
+
+        .recycling-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+            background: rgba(20,48,76,0.75);
+            border: 1px solid rgba(100,190,255,0.18);
+            border-radius: 15px;
+            padding: 22px;
+        }
+
+        .recycling-icon {
+            width: 52px;
+            height: 52px;
+            min-width: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 13px;
+            background: rgba(0,220,150,0.12);
+            font-size: 26px;
+        }
+
+        .recycling-text {
+            flex: 1;
+        }
+
+        .recycling-text p {
+            color: #e5f2fa;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* ENVIRONMENTAL IMPACT */
+
+        .environment-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(0,190,150,0.10),
+                    rgba(20,48,76,0.80)
+                );
+            border: 1px solid rgba(0,220,170,0.25);
+            border-radius: 15px;
+            padding: 22px;
+        }
+
+        .environment-icon {
+            width: 55px;
+            height: 55px;
+            min-width: 55px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 15px;
+
+            background: rgba(0,220,150,0.14);
+
+            font-size: 29px;
+        }
+
+        .environment-content {
+            flex: 1;
+        }
+
+        .environment-content h3 {
+            color: #8fffe0;
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+
+        .environment-content p {
+            color: #e0edf4;
+            line-height: 1.75;
+            font-size: 16px;
+        }
+
+        /* ACTION */
+
+        .action-card {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            background: rgba(0,200,150,0.08);
+            border: 1px solid rgba(0,220,170,0.25);
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .action-icon {
+            font-size: 35px;
+        }
+
+        .action-card p {
+            color: #d7e6f2;
+            line-height: 1.6;
+        }
+
+        /* BIN */
+
+        .bin-card {
+            text-align: center;
+            padding: 25px;
+            border-radius: 15px;
+            background: rgba(20,48,76,0.75);
+            border: 1px solid rgba(100,190,255,0.18);
+        }
+
+        .bin-icon {
+            font-size: 45px;
+            margin-bottom: 10px;
+        }
+
+        .bin-name {
+            font-size: 21px;
+            font-weight: bold;
+            color: #8fffe0;
+        }
+
+        /* BUTTONS */
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 35px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: #00d5ad;
+            color: #06151d;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.08);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.14);
+        }
+
+        /* FOOTER */
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #71899e;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        /* MOBILE */
+
+        @media(max-width:800px) {
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title h1 {
+                font-size: 27px;
+            }
+
+            .prediction-name {
+                font-size: 28px;
+            }
+
+        }
+
+        @media(max-width:500px) {
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .recycling-card,
+            .environment-card,
+            .action-card {
+                flex-direction: column;
+            }
+
+            .container {
+                width: 94%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="header">
+
+        <div class="brand">
+            ♻️ AI Waste Classification
+        </div>
+
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="back-btn"
+        >
+            ← Dashboard
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         TITLE
+    ====================================================== -->
+
+    <div class="page-title">
+
+        <h1>
+            Waste Classification Result
+        </h1>
+
+        <p>
+            AI-powered analysis of your uploaded waste image
+        </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         IMAGE + CLASSIFICATION
+    ====================================================== -->
+
+    <div class="main-grid">
+
+
+        <!-- UPLOADED IMAGE -->
+
+        <div class="card image-card">
+
+            <h2>
+                📷 Uploaded Image
+            </h2>
+
+            <img
+                src="{{ url_for('uploaded_file', filename=image_file) }}"
+                alt="Waste Image"
+                class="uploaded-image"
+            >
+
+        </div>
+
+
+        <!-- AI RESULT -->
+
+        <div class="card result-card">
+
+            <h2>
+                🤖 AI Classification
+            </h2>
+
+            <div class="waste-icon">
+                {{ waste_icon }}
+            </div>
+
+            <div class="prediction-name">
+                {{ prediction }}
+            </div>
+
+
+            <!-- CONFIDENCE -->
+
+            <div class="confidence-box">
+
+                <div class="confidence-header">
+
+                    <strong>
+                        Confidence
+                    </strong>
+
+                    <strong>
+                        {{ "%.2f"|format(confidence|float) }}%
+                    </strong>
+
+                </div>
+
+                <div class="confidence-bar">
+
+                    <div
+                        class="confidence-fill"
+                        style="width: {{ confidence|float }}%;"
+                    ></div>
+
+                </div>
+
+                <div class="confidence-status">
+                    {{ confidence_status }}
+                </div>
+
+                <div class="status-message">
+                    {{ status_message }}
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RECOMMENDATION
+    ====================================================== -->
+
+    <div class="info-section">
+
+        <h2>
+            💡 Recommendation
+        </h2>
+
+        <div class="info-card">
+
+            <p>
+                {{ recommendation }}
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RECYCLING & REUSE
+    ====================================================== -->
+
+    <div class="info-section">
+
+        <h2>
+            ♻️ Recycling & Reuse Uses
+        </h2>
+
+        <div class="recycling-card">
+
+            <div class="recycling-icon">
+                ♻️
+            </div>
+
+            <div class="recycling-text">
+
+                <p>
+                    {{ recycling_uses }}
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RECYCLING PROCESS
+    ====================================================== -->
+
+    <div class="info-section">
+
+        <h2>
+            🔄 Recycling Process
+        </h2>
+
+        <div class="info-card">
+
+            <p>
+                {{ recycling_process }}
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ENVIRONMENTAL IMPACT
+         NEW SECTION
+    ====================================================== -->
+
+    <div class="info-section">
+
+        <h2>
+            🌱 Environmental Impact
+        </h2>
+
+        <div class="environment-card">
+
+            <div class="environment-icon">
+                🌍
+            </div>
+
+            <div class="environment-content">
+
+                <h3>
+                    Environmental Impact of {{ prediction }}
+                </h3>
+
+                <p>
+                    {{ environmental_impact }}
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SOLUTIONS
+    ====================================================== -->
+
+    <div class="info-section">
+
+        <h2>
+            🌿 Solutions
+        </h2>
+
+        <div class="info-card">
+
+            <p>
+                {{ solutions }}
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RECOMMENDED ACTION
+    ====================================================== -->
+
+    <div class="info-section">
+
+        <h2>
+            ✅ Recommended Action
+        </h2>
+
+        <div class="action-card">
+
+            <div class="action-icon">
+                ✅
+            </div>
+
+            <p>
+                {{ action }}
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         RECOMMENDED COLLECTION
+    ====================================================== -->
+
+    <div class="info-section">
+
+        <h2>
+            🗑️ Recommended Collection
+        </h2>
+
+        <div class="bin-card">
+
+            <div class="bin-icon">
+                🗑️
+            </div>
+
+            <div class="bin-name">
+                {{ recommended_bin }}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         BUTTONS
+    ====================================================== -->
+
+    <div class="buttons">
+
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="btn btn-primary"
+        >
+            🔄 Classify Another Image
+        </a>
+
+        <a
+            href="{{ url_for('history') }}"
+            class="btn btn-secondary"
+        >
+            📜 Prediction History
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <div class="footer">
+
+        AI-Based Smart Waste Classification System
+
+        <br>
+
+        Deep Learning • MobileNetV2 • Flask
+
+    </div>
+
+
+</div>
+
+</body>
+</html>

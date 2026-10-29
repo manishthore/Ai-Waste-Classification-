@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | AI Waste Classification</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #07111f;
+            color: white;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6%;
+            background: #0b1728;
+            border-bottom: 1px solid #1d3148;
+        }
+
+        .logo {
+            font-size: 21px;
+            font-weight: bold;
+            color: #55f2d0;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-right a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+        }
+
+        .logout {
+            background: #ef5350;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 45px auto;
+        }
+
+        .welcome {
+            margin-bottom: 30px;
+        }
+
+        .welcome h1 {
+            font-size: 34px;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: #9db0c5;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #0d1d31, #0a1627);
+            border: 1px solid #203952;
+            border-radius: 18px;
+            padding: 35px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+        }
+
+        .card h2 {
+            color: #55f2d0;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #9db0c5;
+            margin-bottom: 25px;
+        }
+
+        .upload-box {
+            border: 2px dashed #3b607d;
+            border-radius: 15px;
+            padding: 40px 20px;
+            text-align: center;
+            background: #091727;
+            transition: 0.3s;
+        }
+
+        .upload-box:hover {
+            border-color: #55f2d0;
+        }
+
+        .upload-icon {
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+        .upload-box h3 {
+            margin-bottom: 10px;
+        }
+
+        .upload-box p {
+            color: #91a4b8;
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .choose-btn {
+            display: inline-block;
+            background: #55f2d0;
+            color: #06121d;
+            padding: 13px 24px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .file-name {
+            margin-top: 18px;
+            color: #55f2d0;
+            font-size: 15px;
+            word-break: break-word;
+        }
+
+        .preview {
+            display: none;
+            margin: 25px auto 0;
+            max-width: 350px;
+        }
+
+        .preview img {
+            width: 100%;
+            max-height: 280px;
+            object-fit: contain;
+            border-radius: 12px;
+            border: 1px solid #31506a;
+        }
+
+        .classify-btn {
+            width: 100%;
+            margin-top: 25px;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #20dfbd, #55f2d0);
+            color: #04121d;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .classify-btn:hover {
+            opacity: 0.9;
+        }
+
+        .classify-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            color: #55f2d0;
+        }
+
+        .spinner {
+            width: 28px;
+            height: 28px;
+            border: 3px solid #284257;
+            border-top: 3px solid #55f2d0;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: auto auto 10px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .error {
+            display: none;
+            margin-top: 20px;
+            padding: 13px;
+            border-radius: 8px;
+            background: #35171b;
+            color: #ff8d8d;
+            border: 1px solid #6d2a31;
+            text-align: center;
+        }
+
+        .links {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .links a {
+            text-decoration: none;
+            color: white;
+            background: #142940;
+            border: 1px solid #27445d;
+            padding: 12px 18px;
+            border-radius: 8px;
+        }
+
+        @media(max-width:600px) {
+
+            .navbar {
+                padding: 0 4%;
+            }
+
+            .container {
+                width: 94%;
+                margin-top: 25px;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            .welcome h1 {
+                font-size: 27px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        ♻ AI Waste Classification
+    </div>
+
+    <div class="nav-right">
+
+        <a href="{{ url_for('history') }}">
+            History
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+    <div class="welcome">
+
+        <h1>
+            Welcome, {{ session.get('user_name', 'User') }} 👋
+        </h1>
+
+        <p>
+            Upload a waste image and let the AI classify it.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>♻ Classify Waste</h2>
+
+        <p class="description">
+            Upload a JPG, JPEG, PNG or WEBP image for AI-based waste classification.
+        </p>
+
+
+        <!-- IMPORTANT FORM -->
+
+        <form
+            id="predictionForm"
+            action="{{ url_for('predict') }}"
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            <div class="upload-box">
+
+                <div class="upload-icon">
+                    📷
+                </div>
+
+                <h3>
+                    Select Waste Image
+                </h3>
+
+                <p>
+                    Choose an image from your computer
+                </p>
+
+
+                <label for="wasteImage" class="choose-btn">
+                    Choose Image
+                </label>
+
+                <input
+                    type="file"
+                    id="wasteImage"
+                    name="file"
+                    accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                    required
+                >
+
+
+                <div id="fileName" class="file-name">
+                    No image selected
+                </div>
+
+
+                <div id="preview" class="preview">
+
+                    <img
+                        id="previewImage"
+                        src=""
+                        alt="Selected waste image"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                id="classifyButton"
+                class="classify-btn"
+                disabled
+            >
+                🔍 Classify Waste
+            </button>
+
+
+            <div id="loading" class="loading">
+
+                <div class="spinner"></div>
+
+                <p>
+                    AI is analyzing the image...
+                </p>
+
+            </div>
+
+
+            <div id="errorMessage" class="error"></div>
+
+        </form>
+
+
+        <div class="links">
+
+            <a href="{{ url_for('history') }}">
+                📊 Prediction History
+            </a>
+
+            <a href="{{ url_for('logout') }}">
+                🚪 Logout
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const fileInput = document.getElementById("wasteImage");
+const fileName = document.getElementById("fileName");
+const preview = document.getElementById("preview");
+const previewImage = document.getElementById("previewImage");
+const classifyButton = document.getElementById("classifyButton");
+const predictionForm = document.getElementById("predictionForm");
+const loading = document.getElementById("loading");
+const errorMessage = document.getElementById("errorMessage");
+
+
+/* --------------------------------
+   FILE SELECTION
+-------------------------------- */
+
+fileInput.addEventListener("change", function () {
+
+    errorMessage.style.display = "none";
+    errorMessage.innerHTML = "";
+
+    if (!this.files || this.files.length === 0) {
+
+        fileName.innerText = "No image selected";
+
+        preview.style.display = "none";
+
+        classifyButton.disabled = true;
+
+        return;
+    }
+
+
+    const file = this.files[0];
+
+    const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+    ];
+
+
+    if (!allowedTypes.includes(file.type)) {
+
+        fileName.innerText = "Invalid file type";
+
+        preview.style.display = "none";
+
+        classifyButton.disabled = true;
+
+        errorMessage.innerText =
+            "Please select JPG, JPEG, PNG or WEBP image.";
+
+        errorMessage.style.display = "block";
+
+        fileInput.value = "";
+
+        return;
+    }
+
+
+    /* File size limit = 10 MB */
+
+    if (file.size > 10 * 1024 * 1024) {
+
+        fileName.innerText = "File is too large";
+
+        preview.style.display = "none";
+
+        classifyButton.disabled = true;
+
+        errorMessage.innerText =
+            "Please select an image smaller than 10 MB.";
+
+        errorMessage.style.display = "block";
+
+        fileInput.value = "";
+
+        return;
+    }
+
+
+    fileName.innerText =
+        "Selected: " + file.name;
+
+
+    /* Show preview */
+
+    const reader = new FileReader();
+
+
+    reader.onload = function (event) {
+
+        previewImage.src = event.target.result;
+
+        preview.style.display = "block";
+
+    };
+
+
+    reader.readAsDataURL(file);
+
+
+    /* Enable classify button */
+
+    classifyButton.disabled = false;
+
+});
+
+
+/* --------------------------------
+   FORM SUBMIT
+-------------------------------- */
+
+predictionForm.addEventListener("submit", function () {
+
+    if (!fileInput.files || fileInput.files.length === 0) {
+
+        errorMessage.innerText =
+            "Please select a waste image first.";
+
+        errorMessage.style.display = "block";
+
+        return false;
+    }
+
+
+    /* Disable button to prevent double submission */
+
+    classifyButton.disabled = true;
+
+    classifyButton.innerText =
+        "⏳ Classifying...";
+
+
+    loading.style.display = "block";
+
+});
+
+
+</script>
+
+</body>
+</html>

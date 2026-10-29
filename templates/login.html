@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | AI Waste Classification</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+
+        :root {
+
+            --bg: #050B14;
+
+            --card: #0B1728;
+
+            --input: #07111F;
+
+            --border: #1B3045;
+
+            --border2: #294359;
+
+            --green: #12B886;
+
+            --green2: #087F5B;
+
+            --purple: #7950F2;
+
+            --text: #E8F0F7;
+
+            --muted: #8292A6;
+        }
+
+
+        /* ================= BODY ================= */
+
+        body {
+
+            min-height: 100vh;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 25px;
+
+            background:
+
+                radial-gradient(
+                    circle at 10% 15%,
+                    rgba(121,80,242,0.20),
+                    transparent 32%
+                ),
+
+                radial-gradient(
+                    circle at 90% 85%,
+                    rgba(18,184,134,0.15),
+                    transparent 32%
+                ),
+
+                var(--bg);
+
+            color: var(--text);
+
+            overflow: hidden;
+        }
+
+
+        /* ================= GLOW ================= */
+
+        .glow {
+
+            position: fixed;
+
+            width: 320px;
+
+            height: 320px;
+
+            border-radius: 50%;
+
+            filter: blur(110px);
+
+            opacity: .12;
+
+            pointer-events: none;
+        }
+
+
+        .glow-one {
+
+            background: var(--purple);
+
+            top: -140px;
+
+            left: -120px;
+        }
+
+
+        .glow-two {
+
+            background: var(--green);
+
+            right: -120px;
+
+            bottom: -140px;
+        }
+
+
+        /* ================= WRAPPER ================= */
+
+        .login-wrapper {
+
+            width: 100%;
+
+            max-width: 450px;
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+
+        /* ================= CARD ================= */
+
+        .login-card {
+
+            padding: 42px 38px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(13,28,46,.97),
+                    rgba(5,11,20,.97)
+                );
+
+            border: 1px solid var(--border);
+
+            border-radius: 25px;
+
+            box-shadow:
+
+                0 30px 80px
+                rgba(0,0,0,.55),
+
+                0 0 50px
+                rgba(18,184,134,.04);
+
+            backdrop-filter: blur(20px);
+        }
+
+
+        /* ================= LOGO ================= */
+
+        .logo {
+
+            width: 76px;
+
+            height: 76px;
+
+            margin: 0 auto 20px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 22px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--green),
+                    var(--green2)
+                );
+
+            font-size: 34px;
+
+            box-shadow:
+                0 15px 40px
+                rgba(18,184,134,.25);
+        }
+
+
+        /* ================= TITLE ================= */
+
+        .title {
+
+            text-align: center;
+
+            font-size: 30px;
+
+            font-weight: 800;
+
+            margin-bottom: 8px;
+        }
+
+
+        .title span {
+
+            color: var(--green);
+        }
+
+
+        .subtitle {
+
+            text-align: center;
+
+            color: var(--muted);
+
+            font-size: 14px;
+
+            line-height: 1.5;
+
+            margin-bottom: 25px;
+        }
+
+
+        /* ================= SECURITY BADGE ================= */
+
+        .security {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 7px;
+
+            width: fit-content;
+
+            margin: 0 auto 25px;
+
+            padding: 8px 13px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(18,184,134,.07);
+
+            border:
+                1px solid
+                rgba(18,184,134,.20);
+
+            color: #45D6A8;
+
+            font-size: 11px;
+
+            font-weight: 700;
+        }
+
+
+        /* ================= ALERT ================= */
+
+        .alert {
+
+            padding: 12px 14px;
+
+            margin-bottom: 20px;
+
+            border-radius: 10px;
+
+            background:
+                rgba(255,146,43,.10);
+
+            border:
+                1px solid
+                rgba(255,146,43,.30);
+
+            color: #FFB366;
+
+            font-size: 13px;
+        }
+
+
+        /* ================= FORM ================= */
+
+        .form-group {
+
+            margin-bottom: 20px;
+        }
+
+
+        label {
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #C8D3DE;
+
+            font-size: 13px;
+
+            font-weight: 650;
+        }
+
+
+        /* ================= INPUT ================= */
+
+        .input-box {
+
+            position: relative;
+        }
+
+
+        .input-icon {
+
+            position: absolute;
+
+            left: 15px;
+
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            color: #60758A;
+
+            font-size: 16px;
+
+            pointer-events: none;
+        }
+
+
+        input {
+
+            width: 100%;
+
+            padding: 14px 15px 14px 44px;
+
+            background: var(--input);
+
+            color: var(--text);
+
+            border:
+                1px solid
+                var(--border2);
+
+            border-radius: 11px;
+
+            outline: none;
+
+            font-size: 14px;
+
+            transition: .25s;
+        }
+
+
+        input::placeholder {
+
+            color: #526579;
+        }
+
+
+        input:focus {
+
+            border-color: var(--green);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(18,184,134,.09);
+
+            background: #081522;
+        }
+
+
+        /* ================= PASSWORD ROW ================= */
+
+        .password-row {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 8px;
+        }
+
+
+        .password-row label {
+
+            margin-bottom: 0;
+        }
+
+
+        .forgot {
+
+            color: var(--green);
+
+            text-decoration: none;
+
+            font-size: 11px;
+
+            font-weight: 600;
+        }
+
+
+        .forgot:hover {
+
+            color: #45D6A8;
+
+            text-decoration: underline;
+        }
+
+
+        /* ================= LOGIN BUTTON ================= */
+
+        .login-btn {
+
+            width: 100%;
+
+            padding: 15px;
+
+            margin-top: 5px;
+
+            border: none;
+
+            border-radius: 11px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--green),
+                    var(--green2)
+                );
+
+            color: white;
+
+            font-size: 15px;
+
+            font-weight: 750;
+
+            cursor: pointer;
+
+            transition: .25s;
+
+            box-shadow:
+                0 12px 30px
+                rgba(18,184,134,.20);
+        }
+
+
+        .login-btn:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 17px 38px
+                rgba(18,184,134,.30);
+        }
+
+
+        .login-btn:active {
+
+            transform: translateY(0);
+        }
+
+
+        /* ================= DIVIDER ================= */
+
+        .divider {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin: 25px 0;
+
+            color: #526579;
+
+            font-size: 10px;
+        }
+
+
+        .divider::before,
+        .divider::after {
+
+            content: "";
+
+            flex: 1;
+
+            height: 1px;
+
+            background: var(--border);
+        }
+
+
+        /* ================= REGISTER ================= */
+
+        .register {
+
+            text-align: center;
+
+            color: var(--muted);
+
+            font-size: 13px;
+        }
+
+
+        .register a {
+
+            color: var(--green);
+
+            text-decoration: none;
+
+            font-weight: 750;
+        }
+
+
+        .register a:hover {
+
+            color: #45D6A8;
+
+            text-decoration: underline;
+        }
+
+
+        /* ================= FEATURES ================= */
+
+        .features {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3,1fr);
+
+            gap: 8px;
+
+            margin-top: 25px;
+        }
+
+
+        .feature {
+
+            text-align: center;
+
+            padding: 11px 5px;
+
+            border-radius: 10px;
+
+            background:
+                rgba(255,255,255,.02);
+
+            border:
+                1px solid
+                rgba(255,255,255,.04);
+        }
+
+
+        .feature-icon {
+
+            font-size: 16px;
+
+            margin-bottom: 4px;
+        }
+
+
+        .feature p {
+
+            color: #60758A;
+
+            font-size: 9px;
+        }
+
+
+        /* ================= FOOTER ================= */
+
+        .footer {
+
+            text-align: center;
+
+            margin-top: 22px;
+
+            color: #526579;
+
+            font-size: 10px;
+        }
+
+
+        .footer span {
+
+            color: var(--green);
+        }
+
+
+        /* ================= MOBILE ================= */
+
+        @media(max-width:500px) {
+
+            body {
+
+                padding: 15px;
+
+                overflow: auto;
+            }
+
+
+            .login-card {
+
+                padding: 32px 23px;
+
+                border-radius: 20px;
+            }
+
+
+            .title {
+
+                font-size: 26px;
+            }
+
+
+            .logo {
+
+                width: 65px;
+
+                height: 65px;
+
+                font-size: 29px;
+            }
+
+
+            .features {
+
+                grid-template-columns:
+                    1fr 1fr 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- Background -->
+
+    <div class="glow glow-one"></div>
+
+    <div class="glow glow-two"></div>
+
+
+
+    <!-- LOGIN -->
+
+    <div class="login-wrapper">
+
+
+        <div class="login-card">
+
+
+            <!-- Logo -->
+
+            <div class="logo">
+                ♻️
+            </div>
+
+
+            <!-- Title -->
+
+            <h1 class="title">
+                Welcome <span>Back</span>
+            </h1>
+
+
+            <p class="subtitle">
+                Login to your AI Waste Classification account
+            </p>
+
+
+            <!-- Security -->
+
+            <div class="security">
+                🔒 Secure AI Dashboard Access
+            </div>
+
+
+            <!-- Flash Messages -->
+
+            {% with messages = get_flashed_messages() %}
+
+                {% if messages %}
+
+                    {% for message in messages %}
+
+                        <div class="alert">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+            {% endwith %}
+
+
+
+            <!-- FORM -->
+
+            <form
+                action="{{ url_for('login') }}"
+                method="POST"
+            >
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+
+                    <div class="input-box">
+
+                        <span class="input-icon">
+                            ✉️
+                        </span>
+
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email address"
+                            autocomplete="email"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <div class="password-row">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                    </div>
+
+
+                    <div class="input-box">
+
+                        <span class="input-icon">
+                            🔑
+                        </span>
+
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- LOGIN -->
+
+                <button
+                    type="submit"
+                    class="login-btn"
+                >
+                    Login to Dashboard →
+                </button>
+
+
+            </form>
+
+
+
+            <!-- DIVIDER -->
+
+            <div class="divider">
+                NEW USER
+            </div>
+
+
+
+            <!-- REGISTER -->
+
+            <div class="register">
+
+                Don't have an account?
+
+                <a href="{{ url_for('register') }}">
+                    Create Account
+                </a>
+
+            </div>
+
+
+
+            <!-- FEATURES -->
+
+            <div class="features">
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        🤖
+                    </div>
+
+                    <p>
+                        AI Detection
+                    </p>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        ♻️
+                    </div>
+
+                    <p>
+                        Smart Recycling
+                    </p>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        🔐
+                    </div>
+
+                    <p>
+                        Secure Login
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- FOOTER -->
+
+            <div class="footer">
+
+                © 2026
+
+                <span>
+                    AI Waste Classification
+                </span>
+
+                · Smart Waste Management
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+</body>
+
+</html>
